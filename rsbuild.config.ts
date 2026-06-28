@@ -64,7 +64,12 @@ export default defineConfig({
                 from: 'node_modules/@deriv-com/smartcharts-champion/dist/assets/shaders/*',
                 to: 'assets/shaders/[name][ext]',
             },
-            { from: path.join(__dirname, 'public') },
+            { 
+                from: path.join(__dirname, 'public'),
+                globOptions: {
+                    ignore: ['**/index.html']
+                }
+            },
         ],
         distPath: {
             root: 'dist',
@@ -78,7 +83,7 @@ export default defineConfig({
     html: {
         template: './index.html',
         title: 'Trading Bot',
-        favicon: './public/favicon.ico',
+        favicon: './public/favicon.svg',
     },
     server: {
         port: 5000,

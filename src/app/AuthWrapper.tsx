@@ -7,3 +7,5 @@ export const AuthWrapper = () => {
             <App />
             <PWAUpdateNotification />
         </>
+    );
+};
