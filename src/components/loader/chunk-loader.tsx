@@ -1,58 +1,120 @@
 import React, { useState, useEffect } from 'react';
-import { Loader } from '@deriv-com/ui';
 
 export default function ChunkLoader({ message }: { message: string }) {
     const [progress, setProgress] = useState(0);
+    const [currentMessage, setCurrentMessage] = useState('Initializing...');
+    const [dots, setDots] = useState('');
+
+    const CONFIG = {
+        totalSteps: 100,
+        stepDuration: 50, // 5 seconds total
+        messages: [
+            'Connecting to market...',
+            'Analyzing trends...',
+            'Loading strategies...',
+            'Syncing data...',
+            'Preparing charts...',
+            'Connecting to server...',
+            'Loading dashboard...',
+            'Almost ready...'
+        ]
+    };
 
     useEffect(() => {
         let progressVal = 0;
-        const duration = 5000; // 5 seconds
-        const interval = 50; // Update every 50ms
-        const increment = (100 / duration) * interval;
+        let dotsInterval: NodeJS.Timeout;
 
-        const timer = setInterval(() => {
-            progressVal += increment;
+        const updateProgress = () => {
+            progressVal += 2;
             if (progressVal >= 100) {
                 progressVal = 100;
-                clearInterval(timer);
             }
-            setProgress(Math.floor(progressVal));
-        }, interval);
 
-        return () => clearInterval(timer);
+            setProgress(Math.floor(progressVal));
+
+            // Update message based on progress
+            const msgIndex = Math.floor((progressVal / 100) * CONFIG.messages.length);
+            if (msgIndex < CONFIG.messages.length) {
+                setCurrentMessage(CONFIG.messages[Math.min(msgIndex, CONFIG.messages.length - 1)]);
+            }
+
+            if (progressVal < 100) {
+                setTimeout(updateProgress, CONFIG.stepDuration);
+            }
+        };
+
+        updateProgress();
+
+        // Animate dots
+        let dotCount = 0;
+        dotsInterval = setInterval(() => {
+            dotCount = (dotCount + 1) % 4;
+            setDots('.'.repeat(dotCount));
+        }, 400);
+
+        return () => clearInterval(dotsInterval);
     }, []);
 
     return (
-        <div className='app-root'>
-            <div className="logo-container" style={{ position: 'relative', marginBottom: '40px' }}>
-                <div className="spinner-ring" style={{
-                    position: 'absolute',
-                    top: '-15px',
-                    left: '-15px',
-                    width: '130px',
-                    height: '130px',
-                    border: '4px solid rgba(255, 255, 255, 0.1)',
-                    borderTop: '4px solid #4CAF50',
-                    borderRadius: '50%',
-                    animation: 'spin 1.2s linear infinite'
-                }}></div>
-                <img src="/deriv-logo.svg" alt="RAMZFX" style={{
-                    width: '100px',
-                    height: '100px',
-                    animation: 'pulse 2s ease-in-out infinite'
-                }} />
+        <div className="app-root">
+            {/* ===== TRADING WORDS BACKGROUND ===== */}
+            <div className="trading-bg">
+                <div className="trading-word">📈 BUY</div>
+                <div className="trading-word">📊 SELL</div>
+                <div className="trading-word">💰 PROFIT</div>
+                <div className="trading-word">📉 TRADE</div>
+                <div className="trading-word">⚡ BULLISH</div>
+                <div className="trading-word">📈 FOREX</div>
+                <div className="trading-word">💹 STOCKS</div>
+                <div className="trading-word">📊 CRYPTO</div>
+                <div className="trading-word">🎯 TARGET</div>
+                <div className="trading-word">📈 GAIN</div>
+                <div className="trading-word right">🔽 BEARISH</div>
+                <div className="trading-word right">📊 INDEX</div>
+                <div className="trading-word right">💎 DIAMOND</div>
+                <div className="trading-word right">📈 BULL</div>
+                <div className="trading-word right">📉 BEAR</div>
+                <div className="trading-word right">⚡ MOMENTUM</div>
+                <div className="trading-word right">💰 WEALTH</div>
+                <div className="trading-word right">📊 ANALYSIS</div>
             </div>
-            <div className='load-message'>{message}</div>
-            <div style={{ width: '300px', background: 'rgba(255, 255, 255, 0.1)', borderRadius: '10px', overflow: 'hidden', marginBottom: '10px', marginTop: '20px' }}>
-                <div style={{
-                    height: '8px',
-                    background: 'linear-gradient(90deg, #4CAF50, #8BC34A)',
-                    width: `${progress}%`,
-                    transition: 'width 0.1s ease-out',
-                    borderRadius: '10px'
-                }}></div>
+
+            {/* ===== LOADER ===== */}
+            <div className="loader-container">
+                {/* Glow Effect */}
+                <div className="glow"></div>
+
+                {/* Brand */}
+                <div className="brand">
+                    <div className="brand-icon">R</div>
+                    <div className="brand-name">RamzFX</div>
+                    <div className="brand-sub">Trading Bot</div>
+                </div>
+
+                {/* Spinner */}
+                <div className="spinner-wrapper">
+                    <div className="spinner"></div>
+                </div>
+
+                {/* Progress Bar */}
+                <div className="progress-wrapper">
+                    <div className="progress-track">
+                        <div 
+                            className="progress-fill" 
+                            style={{ width: `${progress}%` }}
+                        ></div>
+                    </div>
+                    <div className="progress-label">
+                        <span>{currentMessage}</span>
+                        <span className="progress-percent">{progress}%</span>
+                    </div>
+                </div>
+
+                {/* Message */}
+                <div className="message">
+                    <span className="highlight">RamzFX</span> is getting ready{dots}
+                </div>
             </div>
-            <div style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.7)' }}>{progress}%</div>
         </div>
     );
 }
