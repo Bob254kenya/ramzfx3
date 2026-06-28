@@ -8,6 +8,8 @@ interface PWAUpdateNotificationProps {
 const PWAUpdateNotification: React.FC<PWAUpdateNotificationProps> = ({ className }) => {
   const [showUpdate, setShowUpdate] = useState(false);
   const [waitingWorker, setWaitingWorker] = useState<ServiceWorker | null>(null);
+  const [showInstallPrompt, setShowInstallPrompt] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
 
   useEffect(() => {
     const handleUpdateAvailable = (event: Event) => {
@@ -39,8 +41,27 @@ const PWAUpdateNotification: React.FC<PWAUpdateNotificationProps> = ({ className
       });
     }
 
+    // Listen for PWA install prompt
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setShowInstallPrompt(true);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    // Listen for app installed event
+    const handleAppInstalled = () => {
+      setShowInstallPrompt(false);
+      setDeferredPrompt(null);
+    };
+
+    window.addEventListener('appinstalled', handleAppInstalled);
+
     return () => {
       window.removeEventListener('pwa-update-available', handleUpdateAvailable);
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('appinstalled', handleAppInstalled);
     };
   }, []);
 
@@ -56,24 +77,73 @@ const PWAUpdateNotification: React.FC<PWAUpdateNotificationProps> = ({ className
     setShowUpdate(false);
   };
 
-  if (!showUpdate) return null;
+  const handleInstall = async () => {
+    if (!deferredPrompt) return;
+    
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    
+    if (outcome === 'accepted') {
+      setShowInstallPrompt(false);
+      setDeferredPrompt(null);
+    }
+  };
+
+  const handleDismissInstall = () => {
+    setShowInstallPrompt(false);
+  };
 
   return (
-    <div className={className || 'pwa-update-notification'}>
-      <div className="notification-content">
-        <span className="notification-message">
-          ✨ New version available! Update for the best experience.
-        </span>
-        <div className="notification-actions">
-          <button onClick={handleUpdate} className="update-button">
-            Update Now
-          </button>
-          <button onClick={handleDismiss} className="dismiss-button">
-            Later
-          </button>
+    <>
+      {showUpdate && (
+        <div className={className || 'pwa-update-notification'}>
+          <div className="notification-content">
+            <span className="notification-message">
+              ✨ New version available! Update for the best experience.
+            </span>
+            <div className="notification-actions">
+              <button onClick={handleUpdate} className="update-button">
+                Update Now
+              </button>
+              <button onClick={handleDismiss} className="dismiss-button">
+                Later
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+
+      {showInstallPrompt && (
+        <div className="pwa-install-prompt">
+          <div className="install-card">
+            <div className="install-card-header">
+              <div className="app-icon">
+                <img src="/logo192.png" alt="RAMZFX" />
+              </div>
+              <div className="app-info">
+                <h2>Install RAMZFX</h2>
+                <p>Your ultimate trading hub</p>
+              </div>
+            </div>
+            <div className="install-card-body">
+              <ul className="install-features">
+                <li>🚀 Fast and responsive</li>
+                <li>📱 Works offline</li>
+                <li>🎯 One-tap access</li>
+              </ul>
+            </div>
+            <div className="install-card-footer">
+              <button onClick={handleDismissInstall} className="cancel-install-button">
+                Later
+              </button>
+              <button onClick={handleInstall} className="install-button">
+                Install App
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
