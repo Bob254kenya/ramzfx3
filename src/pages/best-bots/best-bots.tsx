@@ -86,11 +86,25 @@ const TERMICA_BOTS: TBot[] = [
         emoji: '💰',
     },
     {
+        id: 'ramzfx-vivo',
+        name: 'VEVO_BEST MINER_Bot (1).xml',
+        file: 'VEVO_BEST MINER_Bot (1).xml',
+        description: 'Uses advanced digit probability analysis to identify high-confidence Over and Under opportunities. Designed to trade only when market conditions meet strict entry criteria, helping reduce unnecessary trades.',
+        emoji: '📊',
+    },
+    {
         id: 'termica-shield',
         name: '2.Ramzfx Shield Bot',
         file: 'Kiazala v1 by The Risk Manager (1).xml',
         description: 'Risk-aware Ramzfx bot built for disciplined capital protection. Prioritises capital preservation while seeking consistent returns.',
         emoji: '🛡️',
+    },
+    {
+        id: 'ramzfx-viv',
+        name: '$DollarprinterbotOrignal$ (1).xml',
+        file: '$DollarprinterbotOrignal$ (1).xml',
+        description: 'Continuously analyzes live tick data, digit frequency, and market momentum to generate real-time Over/Under signals. Optimized for fast execution, consistent performance, and high-probability trade setups.',
+        emoji: '📊',
     },
     {
         id: 'termica-pro',
@@ -113,13 +127,7 @@ const TERMICA_BOTS: TBot[] = [
         description: 'Ramzfx trend strategy focused on rise and fall market moves. Captures momentum shifts with precision entry timing.',
         emoji: '📊',
     },
-    {
-        id: 'ramzfx-vivo',
-        name: 'VEVO_BEST MINER_Bot (1).xml',
-        file: 'VEVO_BEST MINER_Bot (1).xml',
-        description: 'Uses advanced digit probability analysis to identify high-confidence Over and Under opportunities. Designed to trade only when market conditions meet strict entry criteria, helping reduce unnecessary trades.',
-        emoji: '📊',
-    },
+    
     {
         id: 'ramzfx-vi',
         name: 'CEO D1 BEST BOT ',
@@ -127,13 +135,7 @@ const TERMICA_BOTS: TBot[] = [
         description: 'Combines intelligent signal detection with an adaptive recovery system. After a loss, the bot waits for a confirmed recovery pattern before re-entering the market, aiming for more disciplined risk management.',
         emoji: '📊',
     },
-    {
-        id: 'ramzfx-viv',
-        name: '$DollarprinterbotOrignal$ (1).xml',
-        file: '$DollarprinterbotOrignal$ (1).xml',
-        description: 'Continuously analyzes live tick data, digit frequency, and market momentum to generate real-time Over/Under signals. Optimized for fast execution, consistent performance, and high-probability trade setups.',
-        emoji: '📊',
-    },
+    
     {
         id: 'termica-prime',
         name: 'Prime Bot',
