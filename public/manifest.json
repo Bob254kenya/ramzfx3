@@ -23,9 +23,9 @@
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
-  "background_color": "#ffffff",
+  "background_color": "#000000",
   "orientation": "portrait-primary",
-  "description": "Your app description",
+  "description": "RAMZFX Trading Hub - Your ultimate trading platform",
   "categories": ["business", "productivity"],
   "screenshots": [
     {
