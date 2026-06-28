@@ -30,6 +30,51 @@
             :root {
                 font-size: 62.5%;
             }
+            #loading-screen {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: url('/assets/images/splash-bg.jpg') no-repeat center center;
+                background-size: cover;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+                color: white;
+                font-family: Arial, sans-serif;
+            }
+            #loading-screen::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.6);
+                z-index: -1;
+            }
+            .loader-spinner {
+                width: 50px;
+                height: 50px;
+                border: 5px solid rgba(255, 255, 255, 0.3);
+                border-top: 5px solid #4CAF50;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+                margin-bottom: 20px;
+            }
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            .loading-text {
+                font-size: 20px;
+                font-weight: bold;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+            }
         </style>
     </head>
 
@@ -45,11 +90,27 @@
         ></noscript>
         <!-- End Google Tag Manager (noscript) -->
 
+        <div id="loading-screen">
+            <div class="loader-spinner"></div>
+            <div class="loading-text">RAMZFX TRADING HUB</div>
+        </div>
+
         <div id="modal_root" class="modal-root"></div>
         <div id="popup_root" class="popup-root"></div>
         <div id="root"></div>
         <!-- LiveChat script -->
         <script type="text/javascript" defer>
+            // Remove loading screen when app is ready
+            window.addEventListener('load', function() {
+                const loader = document.getElementById('loading-screen');
+                if (loader) {
+                    loader.style.opacity = '0';
+                    setTimeout(() => {
+                        loader.remove();
+                    }, 500);
+                }
+            });
+
             window.__lc = window.__lc || {};
             window.__lc.license = 12049137;
             window.__lc.asyncInit = true;
