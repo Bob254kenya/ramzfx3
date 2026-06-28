@@ -32,9 +32,30 @@ app.use(
 );
 app.use(express.json());
 
+// Initialize database flag
+let isDbInitialized = false;
+
+// Middleware to ensure DB is initialized (especially for Vercel serverless)
+app.use(async (req, res, next) => {
+    if (!isDbInitialized && process.env.DATABASE_URL) {
+        try {
+            await initializeDatabase();
+            isDbInitialized = true;
+        } catch (error) {
+            console.error('Lazy DB Init Error:', error);
+        }
+    }
+    next();
+});
+
 // Health check endpoint
 app.get('/health', (req, res) => {
-    res.json({ status: 'OK', message: 'API server is running' });
+    res.json({ 
+        status: 'OK', 
+        message: 'API server is running',
+        env: process.env.VERCEL ? 'vercel' : 'local',
+        db: isDbInitialized ? 'connected' : 'disconnected'
+    });
 });
 
 // Routes
@@ -60,14 +81,22 @@ app.use((req, res) => {
 // Initialize database and start server
 async function start() {
     try {
-        await initializeDatabase();
+        if (!isDbInitialized && process.env.DATABASE_URL) {
+            await initializeDatabase();
+            isDbInitialized = true;
+        }
 
-        app.listen(PORT, '0.0.0.0', () => {
-            console.log(`API server running on http://0.0.0.0:${PORT}`);
-        });
+        // Only start the listener if not running as a Vercel function
+        if (!process.env.VERCEL) {
+            app.listen(PORT, '0.0.0.0', () => {
+                console.log(`API server running on http://0.0.0.0:${PORT}`);
+            });
+        }
     } catch (error) {
         console.error('Failed to start server:', error);
-        process.exit(1);
+        if (!process.env.VERCEL) {
+            process.exit(1);
+        }
     }
 }
 
