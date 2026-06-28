@@ -1,0 +1,95 @@
+.pwa-update-notification {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  background: #1a1a1a;
+  color: #ffffff;
+  padding: 16px 24px;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  max-width: 90%;
+  width: 500px;
+  animation: slideUp 0.3s ease-out;
+
+  .notification-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+
+    .notification-message {
+      flex: 1;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .notification-actions {
+      display: flex;
+      gap: 8px;
+
+      button {
+        padding: 8px 20px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.2s;
+
+        &.update-button {
+          background: #4CAF50;
+          color: white;
+
+          &:hover {
+            background: #45a049;
+            transform: scale(1.02);
+          }
+        }
+
+        &.dismiss-button {
+          background: transparent;
+          color: #999;
+          padding: 8px 12px;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.1);
+          }
+        }
+      }
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+
+  @media (max-width: 768px) {
+    bottom: 10px;
+    padding: 12px 16px;
+    width: 95%;
+
+    .notification-content {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+
+      .notification-message {
+        font-size: 13px;
+      }
+
+      .notification-actions {
+        justify-content: flex-end;
+      }
+    }
+  }
+}
